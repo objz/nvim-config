@@ -1,0 +1,7 @@
+# Neovim generated files
+lazy-lock.json
+undo/
+session/
+.DS_Store
+*.swp
+*.swo

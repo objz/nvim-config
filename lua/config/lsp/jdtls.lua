@@ -38,7 +38,7 @@ local function refresh_gradle_and_restart(root_dir)
       if code == 0 then
         vim.schedule(function()
           vim.notify("Gradle refresh complete. Restarting JDTLS...", vim.log.levels.INFO)
-          pcall(vim.cmd, "JdtUpdateConfig")
+          pcall(vim.cmd, "JdtUpdateConfig!")
           pcall(vim.cmd, "JdtRestart")
         end)
       else
@@ -157,7 +157,7 @@ vim.api.nvim_create_autocmd("FileType", {
     local bufnr = vim.api.nvim_get_current_buf()
     vim.keymap.set("n", "<leader>cG", function()
       refresh_gradle_and_restart(root_dir)
-    end, { buffer = bufnr, desc = "[Java] Refresh Gradle & Restart JDTLS", silent = true })
+    end, { buffer = bufnr, desc = "Refresh Gradle", silent = true })
 
     jdtls.start_or_attach(build_config(root_dir))
   end,

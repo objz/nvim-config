@@ -173,8 +173,6 @@ return {
       spec = {
         { "<leader>f", group = "Find", desc = "Search and navigate", icon = { cat = "extension", name = "md" } },
         { "<leader>c", group = "Code", desc = "LSP actions", icon = { cat = "extension", name = "sh" } },
-        { "<leader>cj", group = "Java", desc = "JDTLS actions", icon = { cat = "extension", name = "java" } },
-        { "<leader>cu", group = "Rust", desc = "Rust tools", icon = { cat = "extension", name = "rs" } },
         { "<leader>d", group = "Debug", desc = "Debugging", icon = { cat = "extension", name = "json" } },
         { "<leader>g", group = "Git", desc = "Git actions", icon = { cat = "extension", name = "diff" } },
         { "<leader>S", group = "Session", desc = "Session management", icon = { cat = "extension", name = "vim" } },

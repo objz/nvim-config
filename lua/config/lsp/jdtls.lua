@@ -85,15 +85,48 @@ local config = {
       vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc, silent = true })
     end
 
-    map("n", "<leader>cjo", jdtls.organize_imports, "[Java] Organize Imports")
-    map("n", "<leader>cjt", jdtls.test_class, "[Java] Test Class")
-    map("n", "<leader>cjn", jdtls.test_nearest_method, "[Java] Test Nearest Method")
-    map("n", "<leader>cjv", jdtls.extract_variable, "[Java] Extract Variable")
-    map("v", "<leader>cjv", [[<ESC><CMD>lua require('jdtls').extract_variable(true)<CR>]], "[Java] Extract Variable")
-    map("n", "<leader>cjm", jdtls.extract_method, "[Java] Extract Method")
-    map("v", "<leader>cjm", [[<ESC><CMD>lua require('jdtls').extract_method(true)<CR>]], "[Java] Extract Method")
-    map("n", "<leader>cjc", jdtls.extract_constant, "[Java] Extract Constant")
-    map("v", "<leader>cjc", [[<ESC><CMD>lua require('jdtls').extract_constant(true)<CR>]], "[Java] Extract Constant")
+    local refresh_gradle_and_restart = function()
+      local root_dir = client.config and client.config.root_dir
+      if not root_dir then
+        vim.notify("JDTLS root dir not available", vim.log.levels.WARN)
+        return
+      end
+
+      local gradlew = root_dir .. "/gradlew"
+      local cmd = nil
+
+      if vim.fn.executable(gradlew) == 1 then
+        cmd = { gradlew, "--refresh-dependencies" }
+      elseif vim.fn.executable("gradle") == 1 then
+        cmd = { "gradle", "--refresh-dependencies" }
+      end
+
+      if not cmd then
+        vim.notify("Gradle not found in project or PATH", vim.log.levels.WARN)
+        return
+      end
+
+      vim.notify("Refreshing Gradle dependencies...", vim.log.levels.INFO)
+
+      vim.fn.jobstart(cmd, {
+        cwd = root_dir,
+        on_exit = function(_, code)
+          if code == 0 then
+            vim.schedule(function()
+              vim.notify("Gradle refresh complete. Restarting JDTLS...", vim.log.levels.INFO)
+              pcall(vim.cmd, "JdtUpdateConfig")
+              pcall(vim.cmd, "JdtRestart")
+            end)
+          else
+            vim.schedule(function()
+              vim.notify("Gradle refresh failed. See :messages for details.", vim.log.levels.ERROR)
+            end)
+          end
+        end,
+      })
+    end
+
+    map("n", "<leader>cG", refresh_gradle_and_restart, "[Java] Refresh Gradle & Restart JDTLS")
 
     require("jdtls").setup_dap({ hotcodereplace = "auto" })
     require("jdtls.dap").setup_dap_main_class_configs()

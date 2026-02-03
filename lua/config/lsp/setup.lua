@@ -78,11 +78,11 @@ end
 
 vim.lsp.enable(vim.tbl_keys(servers))
 
-vim.api.nvim_create_autocmd("LspAttach", {
-  group = vim.api.nvim_create_augroup("lsp-attach-keymaps", { clear = true }),
-  callback = function(args)
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
-    local bufnr = args.buf
+  vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("lsp-attach-keymaps", { clear = true }),
+    callback = function(args)
+      local client = vim.lsp.get_client_by_id(args.data.client_id)
+      local bufnr = args.buf
 
     local map = function(mode, lhs, rhs, desc)
       vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc, silent = true, noremap = true })
@@ -101,13 +101,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "<leader>cw", vim.lsp.buf.workspace_symbol, "Workspace Symbols")
 
     map("n", "<leader>xn", vim.diagnostic.goto_next, "Next Diagnostic")
-    map("n", "<leader>xp", vim.diagnostic.goto_prev, "Previous Diagnostic")
+      map("n", "<leader>xp", vim.diagnostic.goto_prev, "Previous Diagnostic")
 
-    if client and client.supports_method and client.supports_method("textDocument/inlayHint") then
-      map("n", "<leader>uh", function()
-        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }))
-      end, "Toggle Inlay Hints")
-    end
+      if client and client.supports_method and client.supports_method("textDocument/inlayHint") then
+        map("n", "<leader>uh", function()
+          vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }))
+        end, "Toggle Inlay Hints")
+      end
 
     if client and client.supports_method and client.supports_method("textDocument/documentHighlight") then
       local group = vim.api.nvim_create_augroup("LSPHighlight", { clear = false })

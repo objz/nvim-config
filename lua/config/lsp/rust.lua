@@ -5,12 +5,12 @@ vim.g.rustaceanvim = {
         vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc, silent = true })
       end
 
-      map("n", "<leader>cM", function() vim.cmd.RustLsp("expandMacro") end, "[Rust] Expand Macro")
-      map("n", "<leader>cE", function() vim.cmd.RustLsp("explainError") end, "[Rust] Explain Error")
-      map("n", "<leader>cB", function() vim.cmd.RustLsp("debuggables") end, "[Rust] Debuggables")
-      map("n", "<leader>cU", function() vim.cmd.RustLsp("runnables") end, "[Rust] Runnables")
-      map("n", "<leader>cC", function() vim.cmd.RustLsp("openCargo") end, "[Rust] Open Cargo.toml")
-      map("n", "<leader>cP", function() vim.cmd.RustLsp("parentModule") end, "[Rust] Parent Module")
+      map("n", "<leader>cM", function() vim.cmd.RustLsp("expandMacro") end, "Expand Macro")
+      map("n", "<leader>cE", function() vim.cmd.RustLsp("explainError") end, "Explain Error")
+      map("n", "<leader>cB", function() vim.cmd.RustLsp("debuggables") end, "Debuggables")
+      map("n", "<leader>cU", function() vim.cmd.RustLsp("runnables") end, "Runnables")
+      map("n", "<leader>cC", function() vim.cmd.RustLsp("openCargo") end, "Open Cargo.toml")
+      map("n", "<leader>cP", function() vim.cmd.RustLsp("parentModule") end, "Parent Module")
     end,
     capabilities = require("blink.cmp").get_lsp_capabilities(),
     default_settings = {

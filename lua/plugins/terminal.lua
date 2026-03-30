@@ -4,7 +4,6 @@ return {
         cmd = { "ToggleTerm", "TermExec", "ToggleTermToggleAll" },
         keys = {
             { "<F6>",       "<cmd>ToggleTerm<cr>",                            desc = "Toggle Terminal",  mode = { "n", "t" } },
-            { "<leader>tt", "<cmd>ToggleTerm<cr>",                            desc = "Toggle Terminal" },
             { "<leader>tf", "<cmd>ToggleTerm direction=float<cr>",            desc = "Float Terminal" },
             { "<leader>tv", "<cmd>ToggleTerm size=80 direction=vertical<cr>", desc = "Vertical Terminal" },
             {
@@ -37,7 +36,7 @@ return {
         opts = {
             size = function(term)
                 if term.direction == "horizontal" then
-                    return 15
+                    return 20
                 elseif term.direction == "vertical" then
                     return vim.o.columns * 0.4
                 end
@@ -77,15 +76,15 @@ return {
     },
 
     {
-        "nickjvandyke/opencode.nvim",
+        "sudo-tee/opencode.nvim",
+        cmd = "Opencode",
         keys = {
-            { "<leader>oo", function() require("opencode").toggle() end,       desc = "Toggle OpenCode",  mode = { "n", "t" } },
-            { "<leader>oa", function() require("opencode").ask("@this: ") end, desc = "Ask OpenCode",     mode = { "n", "x" } },
-            { "<leader>os", function() require("opencode").select() end,       desc = "OpenCode Actions", mode = { "n", "x" } },
+            { "<leader>og", function() require("opencode.api").toggle() end,     desc = "Toggle OpenCode" },
+            { "<leader>oi", function() require("opencode.api").open_input() end, desc = "OpenCode Input" },
+            { "<leader>o/", function() require("opencode.api").quick_chat() end, desc = "Quick Chat", mode = { "n", "x" } },
         },
         config = function()
-            vim.g.opencode_opts = vim.g.opencode_opts or {}
-            vim.o.autoread = true
+            require("opencode").setup()
         end,
     },
 }

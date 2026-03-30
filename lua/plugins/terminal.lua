@@ -80,8 +80,6 @@ return {
         cmd = "Opencode",
         keys = {
             { "<leader>og", function() require("opencode.api").toggle() end,     desc = "Toggle OpenCode" },
-            { "<leader>oi", function() require("opencode.api").open_input() end, desc = "OpenCode Input" },
-            { "<leader>o/", function() require("opencode.api").quick_chat() end, desc = "Quick Chat", mode = { "n", "x" } },
         },
         config = function()
             require("opencode").setup()

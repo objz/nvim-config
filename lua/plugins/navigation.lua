@@ -14,6 +14,11 @@ return {
             keymaps = {
                 show_help = "<f1>",
             },
+            open_file_function = function(chosen_file)
+                vim.schedule(function()
+                    vim.cmd(string.format("edit %s", vim.fn.fnameescape(chosen_file)))
+                end)
+            end,
         },
     },
 

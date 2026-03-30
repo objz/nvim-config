@@ -100,8 +100,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
         map("n", "<leader>cw", vim.lsp.buf.workspace_symbol, "Workspace Symbols")
 
-        map("n", "<leader>xn", vim.diagnostic.jump({ count = 1 }), "Next Diagnostic")
-        map("n", "<leader>xp", vim.diagnostic.jump({ count = -1 }), "Previous Diagnostic")
+        map("n", "<leader>xn", function() vim.diagnostic.jump({ count = 1 }) end, "Next Diagnostic")
+        map("n", "<leader>xp", function() vim.diagnostic.jump({ count = -1 }) end, "Previous Diagnostic")
 
         if client and client.supports_method and client:supports_method("textDocument/inlayHint") then
             map("n", "<leader>uh", function()

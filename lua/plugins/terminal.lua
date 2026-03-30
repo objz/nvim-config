@@ -1,15 +1,38 @@
 return {
     {
         "akinsho/toggleterm.nvim",
-        version = "*",
-        cmd = { "ToggleTerm", "TermExec", "TermNew", "TermSelect", "ToggleTermToggleAll" },
+        cmd = { "ToggleTerm", "TermExec", "ToggleTermToggleAll" },
         keys = {
             { "<F6>",       "<cmd>ToggleTerm<cr>",                            desc = "Toggle Terminal",  mode = { "n", "t" } },
             { "<leader>tt", "<cmd>ToggleTerm<cr>",                            desc = "Toggle Terminal" },
             { "<leader>tf", "<cmd>ToggleTerm direction=float<cr>",            desc = "Float Terminal" },
             { "<leader>tv", "<cmd>ToggleTerm size=80 direction=vertical<cr>", desc = "Vertical Terminal" },
-            { "<leader>ta", "<cmd>TermNew<cr>",                               desc = "New Terminal" },
-            { "<leader>ts", "<cmd>TermSelect<cr>",                            desc = "Select Terminal" },
+            {
+                "<leader>ta",
+                function()
+                    require("toggleterm.terminal").Terminal:new():toggle()
+                end,
+                desc = "New Terminal",
+            },
+            {
+                "<leader>ts",
+                function()
+                    local terms = require("toggleterm.terminal").get_all(true)
+                    if #terms == 0 then
+                        vim.notify("No terminals open", vim.log.levels.INFO)
+                        return
+                    end
+                    vim.ui.select(terms, {
+                        prompt = "Select Terminal",
+                        format_item = function(term)
+                            return string.format("#%d: %s", term.id, term.display_name or term.name or "terminal")
+                        end,
+                    }, function(choice)
+                        if choice then choice:toggle() end
+                    end)
+                end,
+                desc = "Select Terminal",
+            },
         },
         opts = {
             size = function(term)
@@ -55,13 +78,13 @@ return {
 
     {
         "nickjvandyke/opencode.nvim",
-        version = "*",
         keys = {
             { "<leader>oo", function() require("opencode").toggle() end,       desc = "Toggle OpenCode",  mode = { "n", "t" } },
             { "<leader>oa", function() require("opencode").ask("@this: ") end, desc = "Ask OpenCode",     mode = { "n", "x" } },
             { "<leader>os", function() require("opencode").select() end,       desc = "OpenCode Actions", mode = { "n", "x" } },
         },
-        init = function()
+        config = function()
+            vim.g.opencode_opts = vim.g.opencode_opts or {}
             vim.o.autoread = true
         end,
     },

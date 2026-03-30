@@ -24,7 +24,7 @@ keymap("n", "<M-l>", "<Cmd>bnext<CR>", { desc = "Next buffer", noremap = true, s
 keymap("n", "<M-Left>", "<Cmd>BufferLineCyclePrev<CR>", { desc = "Previous buffer", noremap = true, silent = true })
 keymap("n", "<M-Right>", "<Cmd>BufferLineCycleNext<CR>", { desc = "Next buffer", noremap = true, silent = true })
 keymap("n", "<M-q>", function()
-  require("mini.bufremove").delete(0, true)
+    require("mini.bufremove").delete(0, true)
 end, { desc = "Delete buffer (force)", noremap = true, silent = true })
 
 keymap("n", "<S-j>", "5j", { desc = "Scroll 5 lines down", noremap = true, silent = true })

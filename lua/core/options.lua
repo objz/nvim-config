@@ -11,9 +11,9 @@ opt.scrolloff = 8
 opt.sidescrolloff = 8
 opt.list = true
 opt.listchars = {
-  tab = "→ ",
-  trail = "·",
-  nbsp = "␣",
+    tab = "→ ",
+    trail = "·",
+    nbsp = "␣",
 }
 
 opt.expandtab = true
@@ -53,10 +53,10 @@ opt.foldlevel = 99
 opt.foldlevelstart = 99
 opt.foldenable = true
 opt.fillchars = {
-  foldopen = "",
-  foldclose = "",
-  fold = " ",
-  foldsep = " ",
-  diff = "╱",
-  eob = " ",
+    foldopen = "",
+    foldclose = "",
+    fold = " ",
+    foldsep = " ",
+    diff = "╱",
+    eob = " ",
 }

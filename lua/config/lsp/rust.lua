@@ -1,6 +1,6 @@
 vim.g.rustaceanvim = {
     server = {
-        on_attach = function(bufnr)
+        on_attach = function(client, bufnr)
             local map = function(mode, lhs, rhs, desc)
                 vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc, silent = true })
             end

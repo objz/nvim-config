@@ -67,20 +67,47 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     end,
 })
 
-vim.api.nvim_create_autocmd("LspProgress", {
-    callback = function(ev)
-        local value = ev.data.params.value or {}
-        local msg = value.message or "done"
-        if #msg > 40 then
-            msg = msg:sub(1, 37) .. "..."
-        end
-        vim.api.nvim_echo({ { msg } }, false, {
-            source = "lsp",
-            id = "lsp",
-            kind = "progress",
-            title = value.title,
-            status = value.kind ~= "end" and "running" or "success",
-            percent = value.percentage,
-        })
-    end,
-})
+do
+    local lsp_progress_tokens = {}
+
+    vim.api.nvim_create_autocmd("LspProgress", {
+        callback = function(ev)
+            local value = ev.data.params.value or {}
+            local token = ev.data.params.token
+            local client_id = ev.data.client_id
+            local key = client_id .. ":" .. tostring(token)
+
+            if value.kind == "begin" then
+                lsp_progress_tokens[key] = { pct = 0, title = value.title or "" }
+            elseif value.kind == "report" then
+                if lsp_progress_tokens[key] then
+                    lsp_progress_tokens[key].pct = value.percentage or lsp_progress_tokens[key].pct
+                end
+            elseif value.kind == "end" then
+                lsp_progress_tokens[key] = nil
+            end
+
+            local total, count = 0, 0
+            for _, v in pairs(lsp_progress_tokens) do
+                total = total + (v.pct or 0)
+                count = count + 1
+            end
+
+            local is_done = count == 0
+            local pct = is_done and 100 or (count > 0 and math.floor(total / count) or 0)
+            local msg = is_done and "done" or (value.title or value.message or "loading")
+            if #msg > 40 then
+                msg = msg:sub(1, 37) .. "..."
+            end
+
+            vim.api.nvim_echo({ { msg } }, false, {
+                source = "lsp",
+                id = "lsp-progress",
+                kind = "progress",
+                title = "LSP",
+                status = is_done and "success" or "running",
+                percent = pct,
+            })
+        end,
+    })
+end

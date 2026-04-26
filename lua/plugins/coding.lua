@@ -3,7 +3,7 @@ return {
         "saghen/blink.cmp",
         lazy = false,
         dependencies = { "rafamadriz/friendly-snippets", "saghen/blink.lib" },
-        build = "cargo build --release",
+        build = function() require('blink.cmp').build():wait(60000) end,
         opts = {
             keymap = {
                 preset = "enter",

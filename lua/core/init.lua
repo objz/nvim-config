@@ -1,3 +1,5 @@
+require("core.compat")
+
 require("core.options")
 
 require("core.keymaps")

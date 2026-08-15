@@ -12,7 +12,7 @@ vim.g.rustaceanvim = {
             map("n", "<leader>cC", function() vim.cmd.RustLsp("openCargo") end, "Open Cargo.toml")
             map("n", "<leader>cP", function() vim.cmd.RustLsp("parentModule") end, "Parent Module")
         end,
-        capabilities = require("blink.cmp").get_lsp_capabilities(),
+        capabilities = require("config.lsp.handlers").capabilities(),
         default_settings = {
             ["rust-analyzer"] = {
                 cargo = {

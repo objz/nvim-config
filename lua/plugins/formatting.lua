@@ -1,9 +1,12 @@
 return {
     {
         "WhoIsSethDaniel/mason-tool-installer.nvim",
+        -- no trigger meant run_on_start never ran
+        event = "VeryLazy",
         dependencies = { "williamboman/mason.nvim" },
         opts = {
             ensure_installed = {
+                "tree-sitter-cli",
                 "stylua",
                 "black",
                 "isort",
@@ -29,7 +32,7 @@ return {
             {
                 "<leader>cf",
                 function()
-                    require("conform").format({ async = true, lsp_fallback = true })
+                    require("conform").format({ async = true, lsp_format = "fallback" })
                 end,
                 mode = "",
                 desc = "Format buffer",

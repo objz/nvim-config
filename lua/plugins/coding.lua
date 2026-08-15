@@ -24,16 +24,6 @@ return {
     },
 
     {
-        "L3MON4D3/LuaSnip",
-        version = "v2.*",
-        build = "make install_jsregexp",
-        dependencies = { "rafamadriz/friendly-snippets" },
-        config = function()
-            require("luasnip.loaders.from_vscode").lazy_load()
-        end,
-    },
-
-    {
         "neovim/nvim-lspconfig",
         event = { "BufReadPre", "BufNewFile" },
         dependencies = {
@@ -86,7 +76,11 @@ return {
                 "yamlls",
                 "marksman",
             },
-            automatic_installation = true,
+            -- v2 renamed this; leaving it as `automatic_installation` silently enabled
+            -- rust_analyzer/jdtls a second time on top of rustaceanvim and nvim-jdtls.
+            automatic_enable = {
+                exclude = { "rust_analyzer", "jdtls" },
+            },
         },
     },
 
@@ -103,18 +97,6 @@ return {
             { "<leader>cl", "<cmd>Trouble lsp toggle focus=false win.position=right<cr>", desc = "LSP Definitions (Trouble)" },
             { "<leader>xL", "<cmd>Trouble loclist toggle<cr>",                            desc = "Location List (Trouble)" },
             { "<leader>xq", "<cmd>Trouble qflist toggle<cr>",                             desc = "Quickfix List (Trouble)" },
-        },
-    },
-
-    {
-        "j-hui/fidget.nvim",
-        event = "LspAttach",
-        opts = {
-            notification = {
-                window = {
-                    winblend = 0,
-                },
-            },
         },
     },
 

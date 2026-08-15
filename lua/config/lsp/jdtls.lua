@@ -1,14 +1,14 @@
 local jdtls = require("jdtls")
 
 local home = os.getenv("HOME")
-local mason_packages = home .. "/.local/share/nvim/mason/packages"
+local mason_packages = vim.fn.stdpath("data") .. "/mason/packages"
 local jdtls_path = mason_packages .. "/jdtls"
 local lombok_path = jdtls_path .. "/lombok.jar"
 local launcher_jar = vim.fn.glob(jdtls_path .. "/plugins/org.eclipse.equinox.launcher_*.jar")
 
 local config_os = "linux"
 
-local capabilities = require("blink.cmp").get_lsp_capabilities()
+local capabilities = require("config.lsp.handlers").capabilities()
 
 local function refresh_gradle_and_restart(root_dir)
     if not root_dir then

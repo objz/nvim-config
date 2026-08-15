@@ -43,6 +43,8 @@ opt.splitbelow = true
 opt.updatetime = 250
 opt.timeoutlen = 300
 
+opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
+
 opt.confirm = true
 opt.hidden = true
 opt.autowrite = true

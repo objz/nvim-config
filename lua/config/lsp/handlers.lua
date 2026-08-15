@@ -1,5 +1,12 @@
 local M = {}
 
+--- blink.cmp completion + nvim-file-operations workspace/*Files support
+M.capabilities = function()
+    return require("blink.cmp").get_lsp_capabilities(
+        require("nvim-file-operations.config").default_capabilities()
+    )
+end
+
 M.setup = function()
     vim.o.winborder = "rounded"
 

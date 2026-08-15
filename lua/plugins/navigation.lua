@@ -1,20 +1,95 @@
 return {
     {
-        "mikavilpas/yazi.nvim",
-        event = "VeryLazy",
+        "nvim-neo-tree/neo-tree.nvim",
+        branch = "v3.x",
+        cmd = "Neotree",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim",
+            "nvim-tree/nvim-web-devicons",
+            "s1n7ax/nvim-window-picker",
+        },
+        init = function()
+            -- lazy-loaded plugins miss `nvim <dir>`, so load it ourselves in that case
+            if vim.fn.argc(-1) == 1 then
+                local stat = vim.uv.fs_stat(vim.fn.argv(0) --[[@as string]])
+                if stat and stat.type == "directory" then
+                    require("neo-tree")
+                end
+            end
+        end,
         keys = {
-            {
-                "<leader>e",
-                "<cmd>Yazi<cr>",
-                desc = "Open Yazi file manager",
-            },
+            { "<leader>e",  "<cmd>Neotree toggle reveal left<cr>",       desc = "Explorer" },
+            { "<leader>E",  "<cmd>Neotree focus reveal left<cr>",        desc = "Explorer (focus file)" },
+            { "<leader>fe", "<cmd>Neotree float reveal<cr>",             desc = "Explorer (float)" },
+            { "<leader>ge", "<cmd>Neotree git_status left toggle<cr>",   desc = "Git Explorer" },
+            { "<leader>be", "<cmd>Neotree buffers left toggle<cr>",      desc = "Buffer Explorer" },
         },
         opts = {
-            open_for_directories = true,
-            keymaps = {
-                show_help = "<f1>",
+            close_if_last_window = true,
+            popup_border_style = "rounded",
+            enable_diagnostics = true,
+            filesystem = {
+                follow_current_file = { enabled = true },
+                use_libuv_file_watcher = true,
+                hijack_netrw_behavior = "open_current",
+                filtered_items = {
+                    hide_dotfiles = false,
+                    hide_gitignored = true,
+                },
+            },
+            window = {
+                width = 32,
+                mappings = {
+                    -- <space> is the leader key; neo-tree grabs it by default
+                    ["<space>"] = "none",
+                    ["l"] = "open",
+                    ["h"] = "close_node",
+                    ["<cr>"] = "open_with_window_picker",
+                    ["s"] = "split_with_window_picker",
+                    ["v"] = "vsplit_with_window_picker",
+                    ["P"] = { "toggle_preview", config = { use_float = true } },
+                    ["O"] = "system_open",
+                },
+            },
+            commands = {
+                system_open = function(state)
+                    vim.ui.open(state.tree:get_node().path)
+                end,
+            },
+            default_component_configs = {
+                indent = { with_expanders = true },
             },
         },
+    },
+
+    {
+        "Crysthamus/nvim-file-operations",
+        event = "VeryLazy",
+        dependencies = {
+            "nvim-neo-tree/neo-tree.nvim",
+        },
+        config = function()
+            require("nvim-file-operations").setup()
+        end,
+    },
+
+    {
+        "s1n7ax/nvim-window-picker",
+        version = "2.*",
+        opts = {
+            filter_rules = {
+                include_current_win = false,
+                autoselect_one = true,
+                bo = {
+                    filetype = { "neo-tree", "neo-tree-popup", "notify" },
+                    buftype = { "terminal", "quickfix" },
+                },
+            },
+        },
+        config = function(_, opts)
+            require("window-picker").setup(opts)
+        end,
     },
 
     {
@@ -42,7 +117,7 @@ return {
             { "<leader>fk", "<cmd>Telescope keymaps<cr>",                   desc = "Keymaps" },
             { "<leader>fw", "<cmd>Telescope grep_string<cr>",               desc = "Grep Word" },
             { "<leader>gc", "<cmd>Telescope git_commits<cr>",               desc = "Git Commits" },
-            { "<leader>gs", "<cmd>Telescope git_status<cr>",                desc = "Git Status" },
+            { "<leader>gt", "<cmd>Telescope git_status<cr>",                desc = "Git Status" },
         },
         opts = {
             defaults = {

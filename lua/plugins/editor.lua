@@ -1,16 +1,43 @@
 return {
     {
+        -- `main` is the default branch now; its API is setup/install + vim.treesitter.start
         "nvim-treesitter/nvim-treesitter",
+        branch = "main",
         lazy = false,
         build = ":TSUpdate",
-        main = "nvim-treesitter",
-        opts = function()
+        dependencies = {
+            { "nvim-treesitter/nvim-treesitter-textobjects", branch = "main" },
+            -- puts mason's bin (and with it the tree-sitter CLI) on PATH before we install
+            "williamboman/mason.nvim",
+        },
+        config = function()
+            require("nvim-treesitter").setup()
+
+            local ensure_installed = {
+                "bash", "c", "css", "diff", "gitcommit", "gitignore", "html", "java", "javascript",
+                "json", "kotlin", "lua", "luadoc", "markdown", "markdown_inline", "python",
+                "query", "regex", "rust", "toml", "tsx", "typescript", "vim", "vimdoc", "yaml",
+            }
+            -- the `main` branch builds parsers with the tree-sitter CLI (mason installs it)
+            if vim.fn.executable("tree-sitter") == 0 then
+                vim.notify("tree-sitter CLI missing; run :MasonInstall tree-sitter-cli", vim.log.levels.WARN)
+            else
+                local installed = require("nvim-treesitter.config").get_installed("parsers")
+                local missing = vim.tbl_filter(function(lang)
+                    return not vim.tbl_contains(installed, lang)
+                end, ensure_installed)
+                if #missing > 0 then
+                    require("nvim-treesitter").install(missing)
+                end
+            end
+
             local excluded = {
                 noice = true,
                 notify = true,
                 alpha = true,
                 dashboard = true,
                 ["neo-tree"] = true,
+                ["neo-tree-popup"] = true,
                 Trouble = true,
                 trouble = true,
                 lazy = true,
@@ -29,26 +56,21 @@ return {
                 [""] = true,
             }
 
-            local function disable(_, buf)
-                local ft = vim.bo[buf].filetype
-                local bt = vim.bo[buf].buftype
-                return bt ~= "" or excluded[ft]
-            end
-
-            return {
-                highlight = {
-                    enable = true,
-                    disable = disable,
-                },
-                indent = {
-                    enable = true,
-                    disable = disable,
-                },
-            }
+            vim.api.nvim_create_autocmd("FileType", {
+                group = vim.api.nvim_create_augroup("treesitter-start", { clear = true }),
+                callback = function(event)
+                    local buf, ft = event.buf, vim.bo[event.buf].filetype
+                    if excluded[ft] or vim.bo[buf].buftype ~= "" then
+                        return
+                    end
+                    -- pcall covers both bundled and nvim-treesitter parsers, and no parser at all
+                    if not pcall(vim.treesitter.start, buf) then
+                        return
+                    end
+                    vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+                end,
+            })
         end,
-        dependencies = {
-            "nvim-treesitter/nvim-treesitter-textobjects",
-        },
     },
 
     {
@@ -106,6 +128,6 @@ return {
     {
         "chrisgrieser/nvim-various-textobjs",
         event = "VeryLazy",
-        opts = { useDefaultKeymaps = true },
+        opts = { keymaps = { useDefaults = true } },
     },
 }

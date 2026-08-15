@@ -179,7 +179,7 @@ return {
                 { "<leader>v", group = "View",        desc = "Window and layout",   icon = { cat = "extension", name = "png" } },
                 { "<leader>x", group = "Diagnostics", desc = "Diagnostics lists",   icon = { cat = "extension", name = "log" } },
                 { "<leader>u", group = "UI",          desc = "Interface options",   icon = { cat = "extension", name = "vim" } },
-                { "<leader>b", hidden = true },
+                { "<leader>b", group = "Buffer",      desc = "Buffer actions",      icon = { cat = "extension", name = "vim" } },
                 { "<leader>t", group = "Terminal",    desc = "Terminal and tabs",   icon = { cat = "extension", name = "sh" } },
                 { "<leader>o", group = "OpenCode",    desc = "AI assistant",        icon = { cat = "extension", name = "md" } },
             },
@@ -200,6 +200,8 @@ return {
         event = "VeryLazy",
         opts = {
             lsp = {
+                -- core/autocmds.lua already renders LSP progress via the 0.13 message API
+                progress = { enabled = false },
                 override = {
                     ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
                     ["vim.lsp.util.stylize_markdown"] = true,

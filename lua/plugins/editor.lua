@@ -18,10 +18,12 @@ return {
                 "json", "kotlin", "lua", "luadoc", "markdown", "markdown_inline", "python",
                 "query", "regex", "rust", "toml", "tsx", "typescript", "vim", "vimdoc", "yaml",
             }
-            -- the `main` branch builds parsers with the tree-sitter CLI (mason installs it)
-            if vim.fn.executable("tree-sitter") == 0 then
-                vim.notify("tree-sitter CLI missing; run :MasonInstall tree-sitter-cli", vim.log.levels.WARN)
-            else
+            -- the `main` branch builds parsers with the tree-sitter CLI, which mason
+            -- installs; on a fresh machine it lands mid-session, so retry on its event
+            local function install_missing()
+                if vim.fn.executable("tree-sitter") == 0 then
+                    return false
+                end
                 local installed = require("nvim-treesitter.config").get_installed("parsers")
                 local missing = vim.tbl_filter(function(lang)
                     return not vim.tbl_contains(installed, lang)
@@ -29,6 +31,15 @@ return {
                 if #missing > 0 then
                     require("nvim-treesitter").install(missing)
                 end
+                return true
+            end
+
+            if not install_missing() then
+                vim.api.nvim_create_autocmd("User", {
+                    pattern = "MasonToolsUpdateCompleted",
+                    once = true,
+                    callback = function() install_missing() end,
+                })
             end
 
             local excluded = {

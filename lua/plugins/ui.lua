@@ -182,6 +182,7 @@ return {
                 { "<leader>b", group = "Buffer",      desc = "Buffer actions",      icon = { cat = "extension", name = "vim" } },
                 { "<leader>t", group = "Terminal",    desc = "Terminal and tabs",   icon = { cat = "extension", name = "sh" } },
                 { "<leader>o", group = "OpenCode",    desc = "AI assistant",        icon = { cat = "extension", name = "md" } },
+                { "<leader>j", group = "Java",        desc = "Java (jc.nvim)",      icon = { cat = "filetype", name = "java" } },
             },
         },
         keys = {

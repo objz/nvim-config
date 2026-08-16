@@ -103,6 +103,15 @@ return {
     { "mfussenegger/nvim-jdtls", lazy = true },
 
     {
+        -- hooks into the jdtls client started by config/lsp/jdtls.lua; ships its
+        -- own <leader>j mappings, so no keys table here
+        "artur-shaik/jc.nvim",
+        ft = "java",
+        dependencies = { "mfussenegger/nvim-jdtls" },
+        opts = { keys_prefix = "<leader>j" },
+    },
+
+    {
         "mrcjkb/rustaceanvim",
         version = "^9",
         lazy = false,

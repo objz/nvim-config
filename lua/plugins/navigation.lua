@@ -45,9 +45,8 @@ return {
                     ["<space>"] = "none",
                     ["l"] = "open",
                     ["h"] = "close_node",
-                    ["<cr>"] = "open_with_window_picker",
-                    ["s"] = "split_with_window_picker",
-                    ["v"] = "vsplit_with_window_picker",
+                    -- <cr>/s/S keep neo-tree's defaults; the window picker stays on its
+                    -- default `w`, since picking fails when the tree is the only window
                     ["P"] = { "toggle_preview", config = { use_float = true } },
                     ["O"] = "system_open",
                 },

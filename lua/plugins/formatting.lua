@@ -1,8 +1,9 @@
 return {
     {
         "WhoIsSethDaniel/mason-tool-installer.nvim",
-        -- no trigger meant run_on_start never ran
-        event = "VeryLazy",
+        -- run_on_start hangs off a VimEnter autocmd in the plugin's plugin/ dir, so any
+        -- trigger firing after VimEnter (VeryLazy included) silently skips it
+        lazy = false,
         dependencies = { "williamboman/mason.nvim" },
         opts = {
             ensure_installed = {

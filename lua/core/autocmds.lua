@@ -69,6 +69,8 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     end,
 })
 
+-- runs alongside fidget.nvim: this is the aggregated bar via the 0.13 message
+-- API, fidget shows the per-client detail bottom right
 do
     local lsp_progress_tokens = {}
 

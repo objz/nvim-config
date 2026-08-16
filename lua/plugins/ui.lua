@@ -170,6 +170,15 @@ return {
                 ellipsis = " ",
                 colors = true,
             },
+            replace = {
+                desc = {
+                    -- jc.nvim maps raw lua calls without a desc
+                    { "^require%('jc[%w%._]-'%)%.", "" },
+                    { "%(%)$",                      "" },
+                    { "<[cC]md>",                   "" },
+                    { "<[cC][rR]>",                 "" },
+                },
+            },
             spec = {
                 { "<leader>f", group = "Find",        desc = "Search and navigate", icon = { cat = "extension", name = "md" } },
                 { "<leader>c", group = "Code",        desc = "LSP actions",         icon = { cat = "extension", name = "sh" } },
@@ -201,7 +210,7 @@ return {
         event = "VeryLazy",
         opts = {
             lsp = {
-                -- core/autocmds.lua already renders LSP progress via the 0.13 message API
+                -- fidget.nvim + core/autocmds.lua both render LSP progress
                 progress = { enabled = false },
                 override = {
                     ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
